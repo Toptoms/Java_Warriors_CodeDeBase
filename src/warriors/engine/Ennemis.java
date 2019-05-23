@@ -1,8 +1,10 @@
 package warriors.engine;
 
 import warriors.contracts.Case;
+import warriors.contracts.Hero;
 
 public class Ennemis implements Case {
+
     private String nom;
     private int vie;
     private int attaque;
@@ -15,17 +17,34 @@ public class Ennemis implements Case {
         this.attaque = attaque;
         this.image = image;
     }
-    public Ennemis(){}
+
+    public Ennemis() {
+    }
 
     public String toString() {
-        return "1 nom : " + this.nom +
-                "\n2 image : " + this.image +
-                "\n3 vie : " + this.vie +
-                "\n4 attaque : " + this.attaque;
+        return this.nom +
+                " vie: " + this.vie +
+                " attaque: " + this.attaque;
+
+    }
+
+    @Override
+    public void modifstat(Hero hero) {
+
+
+
+        vie = vie - ((Personnage) hero).getAttackLevel();
+        if (vie > 0) {
+            ((Personnage) hero).setLife(((Personnage) hero).getLife() - attaque);
+        }
 
     }
 
 
+    public void setLife(int vie) {
+
+        this.vie = vie;
+    }
 
     public String getName() {
         return nom;
@@ -45,4 +64,6 @@ public class Ennemis implements Case {
     public int getAttackLevel() {
         return attaque;
     }
+
+
 }

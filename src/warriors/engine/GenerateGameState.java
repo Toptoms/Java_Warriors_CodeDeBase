@@ -1,9 +1,6 @@
 package warriors.engine;
 
-import warriors.contracts.GameState;
-import warriors.contracts.GameStatus;
-import warriors.contracts.Hero;
-import warriors.contracts.Map;
+import warriors.contracts.*;
 
 import java.util.UUID;
 
@@ -13,7 +10,7 @@ public class GenerateGameState implements GameState {
     private String playername;
     private String gameid;
     private GameStatus gamestatus;
-    private String lastlog;
+    private String lastlog = "0";
     private int currentcase;
 
 
@@ -47,7 +44,7 @@ public class GenerateGameState implements GameState {
         if (currentcase > 64) {
             this.gamestatus = GameStatus.FINISHED;
 
-        } else if (hero.getLife() < 0) {
+        } else if (hero.getLife() <= 0) {
             this.gamestatus = GameStatus.GAME_OVER;
         }
         return gamestatus;
@@ -66,9 +63,14 @@ public class GenerateGameState implements GameState {
     @Override
     public String getLastLog() {
 
-        if (currentcase >= 64){ System.out.println( "YOU WIN !!!!");}
 
-        return "case :"+lastlog;
+        if (currentcase >= 64) {
+            System.out.println("YOU WIN !!!!");
+        } else if (hero.getLife() == 0) System.out.println("YOU LOSE !!!!");
+
+
+
+        return hero.toString() + "\ncase: " + lastlog;
     }
 
 

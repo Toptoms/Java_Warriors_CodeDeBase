@@ -8,6 +8,8 @@ public abstract class Personnage implements Hero {
     private String image;
     private int vie;
     private int attaque;
+    public int viemax;
+    public int attaquemax;
 
 
     public Personnage() {
@@ -18,7 +20,6 @@ public abstract class Personnage implements Hero {
         this.image = image;
         this.vie = vie;
         this.attaque = attaque;
-
     }
 
     public void setName(String nom) {
@@ -39,7 +40,12 @@ public abstract class Personnage implements Hero {
 
 
     public void setAttackLevel(int attaque) {
-        this.attaque = attaque;
+        if (attaque > attaquemax) {
+            this. attaque = attaquemax;
+        } else {
+            this.attaque = attaque;
+        }
+
     }
 
     public int getAttackLevel() {
@@ -47,7 +53,13 @@ public abstract class Personnage implements Hero {
     }
 
     public void setLife(int vie) {
-        this.vie = vie;
+
+        if (vie > viemax) {
+            this.vie = viemax;
+        } else {
+            this.vie = vie;
+        }
+
     }
 
     public int getLife() {
@@ -56,10 +68,9 @@ public abstract class Personnage implements Hero {
 
 
     public String toString() {
-        return "1 nom : " + this.nom +
-                "\n2 image : " + this.image +
-                "\n3 vie : " + this.vie +
-                "\n4 attaque : " + this.attaque;
+        return this.nom +
+                " -> (vie: " + this.vie +
+                " attaque: " + this.attaque + ")";
 
 
     }

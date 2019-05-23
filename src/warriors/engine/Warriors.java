@@ -14,29 +14,23 @@ public class Warriors implements WarriorsAPI {
 
     public Warriors() {
 
-        Personnage magicien = new Magicien("cedric", "brouillon", 3, 8);
+        Personnage magicien = new Magicien("Magicien", "brouillon", 3, 8);
         personnagestab.add(magicien);
-        Personnage guerrier = new Guerrier("flo", "charnu", 5, 5);
+        Personnage guerrier = new Guerrier("Guerrier", "charnu", 5, 5);
         personnagestab.add(guerrier);
 
         GenerateMap mapdebase = new GenerateMap("mapone", 64);
         mapstab.add(mapdebase);
-    }
-
-    public void Action(Case objcas, GenerateGameState myGame) {
-
-
-        if (myGame.getHero() instanceof Guerrier) {
-            if (((Equipement)objcas).getNom() == "arc"||"massue"||"epee"){
-
-            }
-
-            ((Guerrier) myGame.getHero()).setLife();
-        }else{}
-
 
     }
 
+    public void ResetPlayers() {
+        personnagestab=new ArrayList<>();
+        Personnage magicien = new Magicien("Magicien", "brouillon", 3, 8);
+        personnagestab.add(magicien);
+        Personnage guerrier = new Guerrier("Guerrier", "charnu", 5, 5);
+        personnagestab.add(guerrier);
+    }
 
     @Override
     public List<Hero> getHeroes() {
@@ -66,7 +60,11 @@ public class Warriors implements WarriorsAPI {
         myGame.setCurrentcase(de);
         Case objcase = (((GenerateMap) myGame.getMap()).Casestatus(myGame.getCurrentCase()));
         System.out.println(objcase);
-        Action(objcase, myGame);
+
+        if (objcase != null) {
+            objcase.modifstat(myGame.getHero());
+        }
+
         return myGame;
     }
 }
