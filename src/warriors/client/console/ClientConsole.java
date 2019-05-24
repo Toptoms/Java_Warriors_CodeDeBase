@@ -2,6 +2,9 @@ package warriors.client.console;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,25 +19,33 @@ import warriors.engine.Warriors;
 public class ClientConsole {
 
     private static String MENU_COMMENCER_PARTIE = "1";
-    private static String MENU_QUITTER = "2";
+    private static String MENU_COMMENCER_PARTIE_TEST = "2";
+    private static String MENU_QUITTER = "3";
 
     public static void main(String[] args) {
+
 
         WarriorsAPI warriors = new Warriors();
         Scanner sc = new Scanner(System.in);
         String menuChoice = "";
+        int test = 0;
         do {
             menuChoice = displayMenu(sc);
             if (menuChoice.equals(MENU_COMMENCER_PARTIE)) {
-                startGame(warriors, sc);
+
+                startGame(warriors, sc, test);
+            } else if (menuChoice.equals(MENU_COMMENCER_PARTIE_TEST)) {
+                test = 1;
+                startGame(warriors, sc, test);
+
             }
         } while (!menuChoice.equals(MENU_QUITTER));
         sc.close();
         System.out.println("à bientôt");
     }
 
-    private static void startGame(WarriorsAPI warriors, Scanner sc) {
-        ((Warriors)warriors).ResetPlayers();
+    private static void startGame(WarriorsAPI warriors, Scanner sc, int test) {
+        ((Warriors) warriors).ResetPlayers();
         System.out.println();
         System.out.println("Entrez votre nom:");
         String playerName = sc.nextLine();
@@ -59,27 +70,32 @@ public class ClientConsole {
         String gameId = gameState.getGameId();
         while (gameState.getGameStatus() == GameStatus.IN_PROGRESS) {
             System.out.println(gameState.getLastLog());
-            System.out.println("\nAppuyer sur une touche pour lancer le dé");
-            if (sc.hasNext()) {
-                sc.nextLine();
+            if (test == 0) {
+                System.out.println("\nAppuyer sur une touche pour lancer le dé");
+                if (sc.hasNext())
+                    sc.nextLine();
                 gameState = warriors.nextTurn(gameId);
-            }
-        }
+            } else{
+                gameState = ((Warriors) warriors).nextTurnTest(gameId);
 
-        System.out.println(gameState.getLastLog());
+        }
     }
 
-	private static String displayMenu(Scanner sc) {
-		System.out.println();
-		System.out.println("================== Java Warriors ==================");
-		System.out.println("1 - Commencer une partie");
-		System.out.println("2 - Quitter"); 
-		if(sc.hasNext()) {
-			String choice = sc.nextLine();
-			return choice;
-		}		
-		
-		return "";
-	}
+        System.out.println(gameState.getLastLog());
+}
+
+    private static String displayMenu(Scanner sc) {
+        System.out.println();
+        System.out.println("================== Java Warriors ==================");
+        System.out.println("1 - Commencer une partie");
+        System.out.println("2 - Commencer une partie test");
+        System.out.println("3 - Quitter");
+        if (sc.hasNext()) {
+            String choice = sc.nextLine();
+            return choice;
+        }
+
+        return "";
+    }
 }
 

@@ -2,6 +2,10 @@ package warriors.engine;
 
 import warriors.contracts.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -67,4 +71,32 @@ public class Warriors implements WarriorsAPI {
 
         return myGame;
     }
+
+    public GameState nextTurnTest(String gameID) {
+        String orderPath = "./src/order.csv";
+        FileReader dice = null;
+
+        try {
+            dice = new FileReader(orderPath);
+            System.out.println(dice);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        int i = 0;
+
+        int de = 3;
+        i++;
+        //herostate.get(gameID).getCurrentCase();
+        GenerateGameState myGame = ((GenerateGameState) herostate.get(gameID));
+        myGame.setCurrentcase(de);
+        Case objcase = (((GenerateMap) myGame.getMap()).Casestatus(myGame.getCurrentCase()));
+        System.out.println(objcase);
+
+        if (objcase != null) {
+            objcase.modifstat(myGame.getHero());
+        }
+
+        return myGame;
+    }
+
 }
