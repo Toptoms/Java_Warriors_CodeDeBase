@@ -22,10 +22,10 @@ public class ClientConsole {
     private static String MENU_COMMENCER_PARTIE_TEST = "2";
     private static String MENU_QUITTER = "3";
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  throws Exception {
+        String path = args[0];
 
-
-        WarriorsAPI warriors = new Warriors();
+        WarriorsAPI warriors = new Warriors(path) ;
         Scanner sc = new Scanner(System.in);
         String menuChoice = "";
         int test = 0;
@@ -67,6 +67,7 @@ public class ClientConsole {
         Map choosenMap = warriors.getMaps().get(Integer.parseInt(sc.nextLine()) - 1);
 
         GameState gameState = warriors.createGame(playerName, chosenHeroe, choosenMap);
+        int i = 0;
         String gameId = gameState.getGameId();
         while (gameState.getGameStatus() == GameStatus.IN_PROGRESS) {
             System.out.println(gameState.getLastLog());
@@ -75,14 +76,14 @@ public class ClientConsole {
                 if (sc.hasNext())
                     sc.nextLine();
                 gameState = warriors.nextTurn(gameId);
-            } else{
-                gameState = ((Warriors) warriors).nextTurnTest(gameId);
-
+            } else {
+                gameState = ((Warriors) warriors).nextTurnTest(gameId, i);
+                i++;
+            }
         }
-    }
 
         System.out.println(gameState.getLastLog());
-}
+    }
 
     private static String displayMenu(Scanner sc) {
         System.out.println();

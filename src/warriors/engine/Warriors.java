@@ -2,8 +2,11 @@ package warriors.engine;
 
 import warriors.contracts.*;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,9 +17,10 @@ public class Warriors implements WarriorsAPI {
     private ArrayList<Hero> personnagestab = new ArrayList<>();
     private ArrayList<Map> mapstab = new ArrayList<>();
     private Hashtable<String, GameState> herostate = new Hashtable<>();
+    private ArrayList csvtab = new ArrayList<>();
 
 
-    public Warriors() {
+    public Warriors(String orderPath) throws IOException {
 
         Personnage magicien = new Magicien("Magicien", "brouillon", 3, 8);
         personnagestab.add(magicien);
@@ -26,10 +30,21 @@ public class Warriors implements WarriorsAPI {
         GenerateMap mapdebase = new GenerateMap("mapone", 64);
         mapstab.add(mapdebase);
 
+        BufferedReader br = new BufferedReader(new FileReader(orderPath));
+        String ligne = null;
+        while ((ligne = br.readLine()) != null) {
+            // Retourner la ligne dans un tableau
+            String[] data = ligne.split(",");
+
+            // Afficher le contenu du tableau
+            for (String val : data) {
+                csvtab.add(val);
+            }
+        }
     }
 
     public void ResetPlayers() {
-        personnagestab=new ArrayList<>();
+        personnagestab = new ArrayList<>();
         Personnage magicien = new Magicien("Magicien", "brouillon", 3, 8);
         personnagestab.add(magicien);
         Personnage guerrier = new Guerrier("Guerrier", "charnu", 5, 5);
@@ -48,7 +63,6 @@ public class Warriors implements WarriorsAPI {
 
     @Override
     public GameState createGame(String playerName, Hero hero, Map map) {
-
         GenerateGameState newGame = new GenerateGameState(playerName, hero, map);
         herostate.put(newGame.getGameId(), newGame);
 
@@ -56,10 +70,7 @@ public class Warriors implements WarriorsAPI {
 
     }
 
-    @Override
-    public GameState nextTurn(String gameID) {
-        int de = (int) (Math.random() * (6 - 1)) + 1;
-        //herostate.get(gameID).getCurrentCase();
+    public GameState positionperso( String gameID, int de){
         GenerateGameState myGame = ((GenerateGameState) herostate.get(gameID));
         myGame.setCurrentcase(de);
         Case objcase = (((GenerateMap) myGame.getMap()).Casestatus(myGame.getCurrentCase()));
@@ -68,35 +79,21 @@ public class Warriors implements WarriorsAPI {
         if (objcase != null) {
             objcase.modifstat(myGame.getHero());
         }
-
         return myGame;
     }
 
-    public GameState nextTurnTest(String gameID) {
-        String orderPath = "./src/order.csv";
-        FileReader dice = null;
+    @Override
+    public GameState nextTurn(String gameID) {
+        int de = (int) (Math.random() * (6 - 1)) + 1;
+        GameState myGame=null;
 
-        try {
-            dice = new FileReader(orderPath);
-            System.out.println(dice);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int i = 0;
+        return  positionperso(gameID,  de);
+    }
 
-        int de = 3;
-        i++;
-        //herostate.get(gameID).getCurrentCase();
-        GenerateGameState myGame = ((GenerateGameState) herostate.get(gameID));
-        myGame.setCurrentcase(de);
-        Case objcase = (((GenerateMap) myGame.getMap()).Casestatus(myGame.getCurrentCase()));
-        System.out.println(objcase);
+    public GameState nextTurnTest(String gameID, int i) {
+        int de = Integer.parseInt((String) csvtab.get(i));
 
-        if (objcase != null) {
-            objcase.modifstat(myGame.getHero());
-        }
-
-        return myGame;
+        return positionperso(gameID,  de);
     }
 
 }
