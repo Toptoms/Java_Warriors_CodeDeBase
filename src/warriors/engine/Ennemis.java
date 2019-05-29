@@ -23,15 +23,13 @@ public class Ennemis implements Case {
 
     public String toString() {
         return this.nom +
-                " vie: " + this.vie +
-                " attaque: " + this.attaque;
+                " -> (vie: " + this.vie +
+                " attaque: " + this.attaque + ")";
 
     }
 
     @Override
     public void modifstat(Hero hero) {
-
-
 
         vie = vie - ((Personnage) hero).getAttackLevel();
         if (vie > 0) {

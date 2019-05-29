@@ -59,7 +59,7 @@ public class ClientConsole {
         }
         Hero chosenHeroe = warriors.getHeroes().get(Integer.parseInt(sc.nextLine()) - 1);
 
-        System.out.println("Choisissez votre map:");
+        System.out.println("Choisissez votre bite:");
         for (int i = 0; i < warriors.getMaps().size(); i++) {
             Map map = warriors.getMaps().get(i);
             System.out.println(i + 1 + " - " + map.getName());
